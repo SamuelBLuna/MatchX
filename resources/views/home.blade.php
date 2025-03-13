@@ -28,7 +28,7 @@
     <form action="{{ route('generateExercises') }}" method="post">
 
         @csrf
-        
+
         <div class="container border border-primary rounded-3 p-5">
 
             <div class="row gap-5">
@@ -104,10 +104,18 @@
         </div>
 
     </form>
+    {{-- Apresentar erros --}}
+    @if ($errors->any())
+        <div class="container">
+            <div class="alert alert-danger text-center mt-3">
+                Por favor selecione pelo menos uma operação. As parcelas devem ser números entre 0 e 999 e o número de exercicios de 5 a 50.
+            </div>
+        </div>
+    @endif
 
     <!-- footer -->
     <footer class="text-center mt-5">
-        <p class="text-secondary">MathX &copy; <span class="text-info">[ANO]</span></p>
+        <p class="text-secondary">MathX &copy; <span class="text-info">{{ date('Y') }}</span></p>
     </footer>
 
     <!-- bootstrap -->
