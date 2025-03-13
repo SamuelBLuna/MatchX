@@ -27,10 +27,11 @@ class MainController extends Controller
 
         // get select operations
         $operations = [];
-        $operations[] = $request->check_sum ? 'sum'  : '';
-        $operations[] = $request->check_subtraction ? 'subtraction'  : '';
-        $operations[] = $request->check_multiplication ? 'mutiplication'  : '';
-        $operations[] = $request->check_division ? 'division'  : '';
+        if ($request->check_sum) $operations[] = 'sum';
+        if ($request->check_subtraction) $operations[] = 'subtraction';
+        if ($request->check_multiplication) $operations[] = 'multiplication';
+        if ($request->check_division) $operations[] = 'division';
+
 
         //get numbers (min and max)
         $min = $request->number_one;
@@ -41,10 +42,10 @@ class MainController extends Controller
 
         // generate exercises
         $exercises = [];
-        for($index = 1; $index <= $numberExercises; $index++){
+        for ($index = 1; $index <= $numberExercises; $index++) {
             $operation = $operations[\array_rand($operations)];
             $number1 = \rand($min, $max);
-            $number2 = \rand($max, $max);
+            $number2 = \rand($min, $max);
 
             $exercise = '';
             $sollution = '';
@@ -58,22 +59,26 @@ class MainController extends Controller
                     $exercise = "$number1 - $number2 =";
                     $sollution = $number1 - $number2;
                     break;
-                case 'mutiplication':
-                    $exercise = "$number1 * $number2 =";
+                case 'multiplication':
+                    $exercise = "$number1 X $number2 =";
                     $sollution = $number1 * $number2;
                     break;
                 case 'division':
-                    $exercise = "$number1 / $number2 =";
+                    if($number2 == 0) $number2 = 1;
+                    $exercise = "$number1 : $number2 =";
                     $sollution = $number1 / $number2;
                     break;
             }
+            
+            // if sollution us a float number, roun it to 2 decimal places            
+            if(\is_float($sollution)) $sollution = \round($sollution, 2);
 
             $exercises[] = [
+                'opertion' => $operation,
                 'exercise_number' => $index,
                 'exercise' => $exercise,
                 'sollution' => "$exercise $sollution"
             ];
-
         }
 
         \dd($exercises);
